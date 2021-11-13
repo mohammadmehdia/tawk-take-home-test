@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="to.tawk.tawktotestapp.model.GithubUser" />
+        <variable
+            name="negative"
+            type="boolean" />
+        <variable name="navigator" type="to.tawk.tawktotestapp.navigator.ScreenNavigator.Companion" />
+        <import type="android.text.TextUtils" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/md"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="@dimen/sm"
+        app:cardElevation="1dp"
+        app:contentPadding="@dimen/sm"
+        android:onClick="@{ v -> navigator.navigateToUserProfileScreen(context, user.id)}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_cap"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.13"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/onSurface"
+                android:background="@drawable/oval_surface_light"
+                android:gravity="center"
+                android:padding="@dimen/md"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="20sp"
+                android:textStyle="bold"
+                android:text="@{user.login.substring(0, 1).toUpperCase()}"
+                tools:text="S"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.13"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintStart_toStartOf="@id/text_cap"
+                app:layout_constraintEnd_toEndOf="@id/text_cap"
+                app:layout_constraintTop_toTopOf="@id/text_cap"
+                app:layout_constraintBottom_toBottomOf="@id/text_cap"
+                avatar="@{user.avatarUrl}"
+                negative="@{negative}"
+                />
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/iv_avatar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/onPrimary"
+                    android:textSize="@dimen/text_md"
+                    android:textStyle="bold"
+                    android:layout_gravity="start"
+                    android:text="@{user.login}"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/onSurface"
+                    android:textSize="@dimen/text_md"
+                    android:textStyle="bold"
+                    android:layout_gravity="start"
+                    android:text="@{user.name}"
+                    visibleIf="@{!TextUtils.isEmpty(user.name)}"
+                    />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="@dimen/md"
+                app:tint="@color/onSurface"
+                app:srcCompat="@drawable/ic_note"
+                visibleIf="@{!TextUtils.isEmpty(user.note)}"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

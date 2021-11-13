@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="to.tawk.tawktotestapp.viewmodel.ProfileViewModel" />
+        <import type="android.text.TextUtils" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progress_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_margin="@dimen/md"
+                app:indicatorSize="@dimen/progress_indicator_size"
+                app:trackThickness="@dimen/xs"
+                app:trackColor="@color/surface"
+                app:indicatorColor="@color/onPrimary"
+                android:indeterminate="true"
+                visibleIf="@{viewModel.isLoading}"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.35"
+                app:layout_constraintDimensionRatio="H,1:1"
+                android:layout_margin="@dimen/lg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                avatar="@{viewModel.githubUser.avatarUrl}"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/iv_avatar"
+                app:layout_constraintTop_toTopOf="@id/iv_avatar"
+                android:layout_marginStart="@dimen/lg"
+                android:textColor="@color/onPrimary"
+                android:textSize="@dimen/text_xl"
+                android:text="@{viewModel.githubUser.displayName}"
+                android:textStyle="bold"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"
+                app:layout_constraintStart_toStartOf="@id/tv_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:id="@+id/row_followers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/md"
+                    android:layout_gravity="start"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        app:tint="@color/onSurface"
+                        app:srcCompat="@drawable/ic_group_users"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/md"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_md"
+                        boldNumbers="@{@string/x_followers_y_following(viewModel.githubUser.followers, viewModel.githubUser.following)}"
+                        tools:text="16 Followers . 12 Following"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/row_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/md"
+                    android:layout_gravity="start"
+                    visibleIf="@{!TextUtils.isEmpty(viewModel.githubUser.location)}"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        app:tint="@color/onSurface"
+                        app:srcCompat="@drawable/ic_location"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/md"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_md"
+                        android:text="@{viewModel.githubUser.location}"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/row_company"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/md"
+                    android:layout_gravity="start"
+                    visibleIf="@{!TextUtils.isEmpty(viewModel.githubUser.company)}"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        app:tint="@color/onSurface"
+                        app:srcCompat="@drawable/ic_group_users"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/md"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_md"
+                        android:text="@{viewModel.githubUser.company}"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/row_blog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/md"
+                    android:layout_gravity="start"
+                    visibleIf="@{!TextUtils.isEmpty(viewModel.githubUser.blog)}"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        app:tint="@color/onSurface"
+                        app:srcCompat="@drawable/ic_link"
+                        android:layout_gravity="center_vertical"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/md"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_md"
+                        android:text="@{viewModel.githubUser.blog}"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/notes_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/iv_avatar"
+                app:layout_constraintTop_toBottomOf="@id/iv_avatar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.20"
+                android:text="@string/notes_label"
+                android:textSize="@dimen/text_md"
+                android:textColor="@color/onPrimary"
+                />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/input_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/notes_label"
+                android:layout_margin="@dimen/lg"
+                android:textColor="@color/onPrimary"
+                android:background="@drawable/input_notes_bg"
+                android:lines="5"
+                android:hint="@string/notes_hint"
+                android:textSize="@dimen/text_md"
+                android:gravity="top|start"
+                android:padding="@dimen/md"
+                android:text="@={viewModel.note}"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/input_note"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="@dimen/md"
+                app:backgroundTint="@color/onPrimary"
+                android:textColor="@color/surface"
+                android:text="@string/save"
+                android:textSize="@dimen/text_md"
+                android:padding="@dimen/lg"
+                android:onClick="@{v -> viewModel.saveNote()}"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/surface"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:elevation="@dimen/xs"
+                android:background="@android:color/transparent"
+                app:contentInsetStart="0dp"
+                app:contentInsetEnd="0dp"
+                app:layout_scrollFlags="noScroll"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="@dimen/md"
+                    android:paddingEnd="@dimen/md">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/btn_back"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintHeight_percent="0.60"
+                        app:layout_constraintDimensionRatio="H,1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:tint="@color/onSurface"
+                        android:clickable="true" android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        app:srcCompat="@drawable/ic_arrow_left"
+                        android:onClick="@{v -> viewModel.actionBack()}"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_lg"
+                        android:text="@{viewModel.githubUser.login}"
+                        />
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

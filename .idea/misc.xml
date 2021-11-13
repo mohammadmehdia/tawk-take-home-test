@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.3307291666666667" />
+        <entry key="app/src/main/res/drawable/circle_surface.xml" value="0.35648148148148145" />
+        <entry key="app/src/main/res/drawable/search_input_bg.xml" value="0.48020833333333335" />
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.2623456790123457" />
+        <entry key="app/src/main/res/layout/activity_info.xml" value="0.25271739130434784" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3374884265766304" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.24734803759788362" />
+        <entry key="app/src/main/res/layout/github_user_list_item.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/loading_spinner_list_item.xml" value="0.6291532690246516" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

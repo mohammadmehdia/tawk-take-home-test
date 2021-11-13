@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="search_hint_text_appearance">
+        <item name="android:textSize">@dimen/text_xs</item>
+    </style>
+
+
+</resources>

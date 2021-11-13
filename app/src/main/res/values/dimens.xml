@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="md">8dp</dimen>
+    <dimen name="xs">2dp</dimen>
+    <dimen name="progress_indicator_size">24dp</dimen>
+    <dimen name="lg">12dp</dimen>
+    <dimen name="sm">4dp</dimen>
+    <dimen name="text_xs">12sp</dimen>
+    <dimen name="text_md">14sp</dimen>
+    <dimen name="text_lg">16sp</dimen>
+    <dimen name="text_xl">17sp</dimen>
+    <dimen name="text_xxl">18sp</dimen>
+    <dimen name="search_icon_size">16dp</dimen>
+    <dimen name="search_input_padding_horizontal">24dp</dimen>
+    <dimen name="search_input_padding_vertical">@dimen/md</dimen>
+
+</resources>

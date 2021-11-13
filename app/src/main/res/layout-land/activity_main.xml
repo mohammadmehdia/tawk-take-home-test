@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="to.tawk.tawktotestapp.viewmodel.MainViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progress_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_margin="@dimen/sm"
+                app:indicatorSize="@dimen/progress_indicator_size"
+                app:trackThickness="@dimen/xs"
+                app:trackColor="@color/surface"
+                app:indicatorColor="@color/onPrimary"
+                android:indeterminate="true"
+                visibleIf="@{viewModel.isLoading}"
+                />
+
+            <to.tawk.tawktotestapp.customview.GithubUserRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/progress_indicator"
+
+                android:scrollbars="vertical"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/surface"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:elevation="@dimen/xs"
+                android:background="@android:color/transparent"
+                app:contentInsetStart="0dp"
+                app:contentInsetEnd="0dp"
+                app:layout_scrollFlags="noScroll"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/md"
+                    android:paddingEnd="@dimen/md">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/btn_toggle_night_mode"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintHeight_percent="0.75"
+                        app:layout_constraintDimensionRatio="H,1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:tint="@color/onSurface"
+                        android:clickable="true" android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        nightModeStatus="@{viewModel.isNightMode}"
+                        android:onClick="@{v -> viewModel.toggleNightMode()}"
+                        tools:srcCompat="@drawable/ic_night_outlined"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/search_input"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btn_toggle_night_mode"
+                        android:layout_marginEnd="@dimen/md"
+                        android:background="@drawable/search_input_bg"
+                        android:paddingStart="@dimen/search_input_padding_horizontal"
+                        android:paddingEnd="@dimen/search_input_padding_horizontal"
+                        android:paddingTop="@dimen/search_input_padding_vertical"
+                        android:paddingBottom="@dimen/search_input_padding_vertical"
+                        android:textSize="@dimen/text_md"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:lines="1" android:maxLines="1"
+                        android:hint="@string/search"
+                        android:textColorHint="@color/onSurface"
+                        android:textColor="@color/onPrimary"
+                        android:text="@={viewModel.searchKeyword}"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/search_icon_size"
+                        android:layout_height="@dimen/search_icon_size"
+                        app:tint="@color/onSurface"
+                        app:srcCompat="@drawable/ic_search"
+                        app:layout_constraintStart_toStartOf="@id/search_input"
+                        app:layout_constraintTop_toTopOf="@id/search_input"
+                        app:layout_constraintBottom_toBottomOf="@id/search_input"
+                        android:layout_marginStart="@dimen/sm"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
