@@ -3,17 +3,14 @@ package to.tawk.tawktotestapp.viewmodel
 import android.app.Application
 import android.text.TextUtils
 import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import to.tawk.tawktotestapp.config.App
 import to.tawk.tawktotestapp.helper.SingleLiveEvent
-import to.tawk.tawktotestapp.model.DbHelper
+import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.GithubUser
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
@@ -86,7 +83,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({
-                    DbHelper.updatedRecordId.postValue(user.id)
+                    UtilsLiveData.updatedRecordId.postValue(user.id)
                 }, {
                     it.message?.let { msg -> Log.e(TAG, msg) }
                 })
@@ -107,7 +104,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {_ ->
-                    DbHelper.updatedRecordId.postValue(it.id)
+                    UtilsLiveData.updatedRecordId.postValue(it.id)
                     actionEvent.value = ACTION_SAVED
                 }
             )

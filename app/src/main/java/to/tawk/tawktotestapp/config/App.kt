@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.room.AutoMigration
 import androidx.room.Room
 import androidx.room.migration.AutoMigrationSpec
+import to.tawk.tawktotestapp.helper.Utils
+import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.room.AppDatabase
 import to.tawk.tawktotestapp.retrofit.IRetrofitApiService
 import to.tawk.tawktotestapp.retrofit.RetrofitApiClient
@@ -26,6 +28,8 @@ class App : Application() {
         ).build()
         // Create Retrofit Api Client Service
         apiService = RetrofitApiClient.create(this)
+        // inititalize Intent Status
+        UtilsLiveData.internetConnectionStatus.postValue(Utils.isNetworkConnected(this))
     }
 
 

@@ -40,7 +40,7 @@
                 android:id="@+id/iv_avatar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.35"
+                app:layout_constraintWidth_percent="0.25"
                 app:layout_constraintDimensionRatio="H,1:1"
                 android:layout_margin="@dimen/lg"
                 app:layout_constraintTop_toTopOf="parent"
@@ -52,9 +52,9 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/iv_avatar"
-                app:layout_constraintTop_toTopOf="@id/iv_avatar"
-                android:layout_marginStart="@dimen/lg"
+                app:layout_constraintTop_toBottomOf="@id/iv_avatar"
+                app:layout_constraintStart_toStartOf="@id/iv_avatar"
+                android:layout_marginTop="@dimen/md"
                 android:textColor="@color/onPrimary"
                 android:textSize="@dimen/text_xl"
                 android:text="@{viewModel.githubUser.displayName}"
@@ -192,10 +192,9 @@
                 android:id="@+id/notes_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/iv_avatar"
-                app:layout_constraintTop_toBottomOf="@id/iv_avatar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.20"
+                app:layout_constraintStart_toEndOf="@id/iv_avatar"
+                app:layout_constraintTop_toTopOf="@id/iv_avatar"
+                android:layout_marginStart="@dimen/lg"
                 android:text="@string/notes_label"
                 android:textSize="@dimen/text_md"
                 android:textColor="@color/onPrimary"
@@ -305,6 +304,7 @@
                         app:srcCompat="@drawable/ic_no_signal"
                         visibleIf="@{!UtilsLiveData.INSTANCE.internetConnectionStatus}"
                         />
+
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

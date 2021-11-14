@@ -2,8 +2,6 @@ package to.tawk.tawktotestapp.customview
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,8 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import to.tawk.tawktotestapp.adapters.GithubUserAdapter
 import to.tawk.tawktotestapp.helper.EndlessRecyclerOnScrollListener
-import to.tawk.tawktotestapp.model.DbHelper
-import to.tawk.tawktotestapp.model.GithubUser
+import to.tawk.tawktotestapp.helper.UtilsLiveData
 import java.lang.ref.WeakReference
 
 
@@ -49,12 +46,12 @@ class GithubUserRecyclerView(context: Context, attrs: AttributeSet? = null) :
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        DbHelper.updatedRecordId.observeForever(onRecordUpdated)
+        UtilsLiveData.updatedRecordId.observeForever(onRecordUpdated)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        DbHelper.updatedRecordId.removeObserver(onRecordUpdated)
+        UtilsLiveData.updatedRecordId.removeObserver(onRecordUpdated)
     }
 
 

@@ -8,7 +8,9 @@
 
     <color name="backgroundColor">#0B0B0B</color>
     <color name="surface">#222222</color>
-
+    <color name="error">#E53935</color>
+    <color name="onError">#A0A0A0</color>
+    <color name="onErrorLighter">#32A0A0A0</color>
 
     <color name="onPrimary">#FFFFFF</color>
     <color name="onSurface">#A0A0A0</color>
