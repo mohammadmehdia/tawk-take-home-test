@@ -11,7 +11,7 @@ interface GithubUserDao {
     @Query("select * from users where id > :since limit :size")
     fun loadUsersSince(since: Long, size: Int = 30) : Single<List<GithubUser>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertUsers(users: List<GithubUser>) : LongArray
 
     @Update
@@ -28,5 +28,6 @@ interface GithubUserDao {
 
     @Query("select * from users where login like :keyword or name  like :keyword or note like :keyword")
     fun search(keyword: String) : Single<List<GithubUser>>
+
 
 }

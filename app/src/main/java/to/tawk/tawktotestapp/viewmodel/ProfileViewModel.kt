@@ -79,6 +79,9 @@ class ProfileViewModel(application: Application) : BaseViewModel(application) {
 
     // insert new data in local database
     private fun updateLocalRecord(user: GithubUser) {
+        // put user note on model before persist on database
+        note.value?.let { user.note = it }
+        // update record to local database
         App.db.githubUserDao().updateUser(user)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
