@@ -12,6 +12,9 @@ interface GithubUserDao {
     fun loadUsersSince(since: Long, size: Int = 30) : Single<List<GithubUser>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertUser(user: GithubUser) : Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertUsers(users: List<GithubUser>) : LongArray
 
     @Update

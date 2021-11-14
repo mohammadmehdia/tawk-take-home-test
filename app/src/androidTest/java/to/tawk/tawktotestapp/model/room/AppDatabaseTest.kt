@@ -10,7 +10,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import to.tawk.tawktotestapp.model.GithubUser
 import java.io.IOException
+
 
 @RunWith(AndroidJUnit4::class)
 class AppDatabaseTest : TestCase() {
@@ -31,15 +33,28 @@ class AppDatabaseTest : TestCase() {
         db.close()
     }
 
+    private fun createTestObject(id: Long) = GithubUser(
+        id = id,
+        login = "user#$id",
+        avatarUrl = "avatar#$id",
+        url = "url#$id",
+        blog = "blog#$id",
+        company = "company$id",
+        name = "name$id",
+        location = "location$id",
+        followers = id.toInt() * 1000,
+        following = id.toInt() * 15,
+        note = "note$id"
+    )
+
+
+
     @Test
-    fun writeAndReadSpend() = runBlocking {
-
-//        val spend = Spend(Date(), 100, "for Bread")
-//        spendsDao.addSpend(spend)
-//        val spends = spendsDao.getLast20Spends()
-//
-//        assert(spends.contains(spend))
-
+    fun doCrudOperation() = runBlocking {
+        // Check Single Insert
+        val obj = createTestObject(1L)
+        val result = db.githubUserDao().insertUser(obj)
+        assert(result == 1L)
     }
 
 
