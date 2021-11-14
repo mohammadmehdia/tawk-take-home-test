@@ -18,25 +18,17 @@
         tools:replace="android:supportsRtl">
 
         <activity android:name=".view.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.ProfileActivity" />
-
-
-<!--        Register NetworkStateReceiver-->
-        <receiver android:name=".helper.NetworkStateReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".view.ProfileActivity"
+            />
 
     </application>
 

@@ -1,9 +1,12 @@
 package to.tawk.tawktotestapp.config
 
 import android.app.Application
+import android.content.IntentFilter
+import android.provider.ContactsContract.Intents.Insert.ACTION
 import androidx.room.AutoMigration
 import androidx.room.Room
 import androidx.room.migration.AutoMigrationSpec
+import to.tawk.tawktotestapp.helper.NetworkStateReceiver
 import to.tawk.tawktotestapp.helper.Utils
 import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.room.AppDatabase
@@ -15,6 +18,7 @@ class App : Application() {
     companion object {
         lateinit var apiService: IRetrofitApiService
         lateinit var db: AppDatabase
+        lateinit var networkStateReceiver: NetworkStateReceiver
     }
 
     override fun onCreate() {
@@ -30,6 +34,15 @@ class App : Application() {
         apiService = RetrofitApiClient.create(this)
         // inititalize Intent Status
         UtilsLiveData.internetConnectionStatus.postValue(Utils.isNetworkConnected(this))
+        // register network state receiver
+        networkStateReceiver = NetworkStateReceiver()
+        registerReceiver(networkStateReceiver, IntentFilter(NetworkStateReceiver.ACTION))
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        // unregister NetworkStateReceiver
+        unregisterReceiver(networkStateReceiver)
     }
 
 

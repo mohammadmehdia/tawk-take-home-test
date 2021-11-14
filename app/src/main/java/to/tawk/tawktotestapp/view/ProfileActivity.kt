@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import to.tawk.tawktotestapp.R
 import to.tawk.tawktotestapp.databinding.ActivityProfileBinding
 import to.tawk.tawktotestapp.helper.Utils
+import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.viewmodel.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -35,6 +36,7 @@ class ProfileActivity : AppCompatActivity() {
         viewModel = defaultViewModelProviderFactory.create(ProfileViewModel::class.java)
         // attac viewmodel to view
         binding.viewModel = viewModel
+        binding.utilsLiveData = UtilsLiveData.Companion
         binding.lifecycleOwner = this
         // listen for user actions (back, ...)
         viewModel.actionEvent.observe(this, {
@@ -48,6 +50,18 @@ class ProfileActivity : AppCompatActivity() {
         })
         // fetch data
         viewModel.fetch(intent.getLongExtra(KEY_USER_ID, -1))
+
+        // observe for internet connection
+        UtilsLiveData.internetConnectionStatus.observe(this, { status ->
+            if(status) {
+                viewModel.sendPendingRequest()
+            }
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clear();
     }
 
 

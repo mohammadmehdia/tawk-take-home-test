@@ -8,7 +8,9 @@
             name="viewModel"
             type="to.tawk.tawktotestapp.viewmodel.ProfileViewModel" />
         <import type="android.text.TextUtils" />
-        <import type="to.tawk.tawktotestapp.helper.UtilsLiveData"/>
+        <variable
+            name="utilsLiveData"
+            type="to.tawk.tawktotestapp.helper.UtilsLiveData.Companion" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -40,7 +42,7 @@
                 android:id="@+id/iv_avatar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.25"
+                app:layout_constraintWidth_percent="0.20"
                 app:layout_constraintDimensionRatio="H,1:1"
                 android:layout_margin="@dimen/lg"
                 app:layout_constraintTop_toTopOf="parent"
@@ -62,11 +64,12 @@
                 />
 
             <LinearLayout
+                android:id="@+id/info_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.30"
                 app:layout_constraintTop_toBottomOf="@id/tv_name"
                 app:layout_constraintStart_toStartOf="@id/tv_name"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:orientation="vertical"
                 >
 
@@ -142,7 +145,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         app:tint="@color/onSurface"
-                        app:srcCompat="@drawable/ic_group_users"
+                        app:srcCompat="@drawable/ic_company"
                         android:layout_gravity="center_vertical"
                         />
 
@@ -192,7 +195,7 @@
                 android:id="@+id/notes_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/iv_avatar"
+                app:layout_constraintStart_toEndOf="@id/info_layout"
                 app:layout_constraintTop_toTopOf="@id/iv_avatar"
                 android:layout_marginStart="@dimen/lg"
                 android:text="@string/notes_label"
@@ -302,7 +305,7 @@
                         android:clickable="true" android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         app:srcCompat="@drawable/ic_no_signal"
-                        visibleIf="@{!UtilsLiveData.INSTANCE.internetConnectionStatus}"
+                        visibleIf="@{!utilsLiveData.internetConnectionStatus}"
                         />
 
 

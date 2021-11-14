@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import to.tawk.tawktotestapp.adapters.GithubUserAdapter
 import to.tawk.tawktotestapp.helper.EndlessRecyclerOnScrollListener
 import to.tawk.tawktotestapp.helper.UtilsLiveData
@@ -29,11 +30,11 @@ class GithubUserRecyclerView(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun getAdapter(): GithubUserAdapter {
-        if(super.getAdapter() is GithubUserAdapter) {
-            return super.getAdapter() as GithubUserAdapter
+        return if(super.getAdapter() is GithubUserAdapter) {
+            super.getAdapter() as GithubUserAdapter
         } else {
-            setAdapter(GithubUserAdapter())
-            return adapter
+            adapter = GithubUserAdapter()
+            adapter
         }
     }
 

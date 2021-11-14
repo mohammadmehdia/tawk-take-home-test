@@ -1,40 +1,44 @@
 package to.tawk.tawktotestapp.viewmodel
 
 import android.app.Application
+import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import to.tawk.tawktotestapp.config.App
+import to.tawk.tawktotestapp.config.Constants
 import to.tawk.tawktotestapp.helper.SingleLiveEvent
+import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.GithubUser
 import to.tawk.tawktotestapp.session.SessionManager
+import java.util.concurrent.TimeUnit
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(application: Application) : BaseViewModel(application) {
 
     companion object {
         private const val TAG = "MainViewModel"
         const val ACTION_RESET_LIST: Int = 301
     }
 
-    private val disposable: CompositeDisposable = CompositeDisposable()
-    val actionEvent: SingleLiveEvent<Int> = SingleLiveEvent()
-    val isLoading: MutableLiveData<Boolean> = MutableLiveData()
     val dataReceived: MutableLiveData<List<GithubUser>> = MutableLiveData()
     val isNightMode: MutableLiveData<Boolean> = MutableLiveData(SessionManager.isNightMode());
     val searchKeyword: MutableLiveData<String> = MutableLiveData()
     val searchResult: MutableLiveData<List<GithubUser>> = MutableLiveData()
 
+    private var pendingSinceParam = -1L
     private var since: Long = 0
 
     fun fetch(pageNo: Int = 0) {
         val sinceParam = if(pageNo<=0) 0 else since
         // Try to load from local databae, on failure or empty data, load from api
-        disposable.add(
+        compositeDisposable.add(
             App.db.githubUserDao().loadUsersSince(sinceParam)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -66,11 +70,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // load data from api
     private fun fetchFromApi(_since: Long = 0) {
-        disposable.add(
+        if(UtilsLiveData.internetConnectionStatus.value == true) {
+            // Is Online -> perform api search
             App.apiService.getUsers(_since)
                 .subscribeOn(Schedulers.io())
+                .delay(Constants.NETWORK_DELAY, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-
                 .doOnSubscribe {
                     isLoading.postValue(true)
                 }
@@ -89,7 +94,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 } ,{
                     Log.d(TAG, it.message ?: "")
                 } )
-        )
+                .addTo(compositeDisposable)
+            pendingSinceParam = -1
+        } else {
+            // No Internet Connection -> save as perform disposable
+            pendingSinceParam = _since
+        }
     }
 
     // fetch data from the first (since = 0)
@@ -99,8 +109,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // Reset The :since parameter to reload data, and fire ACTION_RESET_LIST event to the view
     private fun resetList() {
-        since = 0
         actionEvent.value = ACTION_RESET_LIST
+        since = 0
     }
 
     // Triggers the event to toggle night mode value
@@ -114,7 +124,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // Store Received Items To Local Database
     private fun storeUsersListToDatabase(list: List<GithubUser>) {
         if(!list.isNullOrEmpty()) {
-            disposable.add(
+            compositeDisposable.add(
                 Observable.fromCallable {
                     App.db.githubUserDao().insertUsers(list)
                 }
@@ -122,7 +132,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     .observeOn(Schedulers.io())
                     .subscribe(
                         {
-                            Log.d(TAG, "Saved Users To Database")
+                            Log.d(TAG, "Saved Users To Database -> ${it.size}")
                         }, {
                             Log.e(TAG, "Error On Database Insertion: ${it.message}")
                         })
@@ -130,7 +140,29 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    
+    fun sendPendingRequest() {
+        if(pendingSinceParam >= 0)
+            fetchFromApi(pendingSinceParam)
+    }
+
+    // perform search
+    fun performSearch(keyword: String?) {
+        if(TextUtils.isEmpty(keyword)) {
+            searchResult.value = null
+            resetList()
+            fetch(0)
+        } else {
+            App.db.githubUserDao().search("%${keyword}%")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                           searchResult.value = it
+                }, {
+                    searchResult.value = null
+                })
+                .addTo(compositeDisposable)
+        }
+    }
 
 
 }

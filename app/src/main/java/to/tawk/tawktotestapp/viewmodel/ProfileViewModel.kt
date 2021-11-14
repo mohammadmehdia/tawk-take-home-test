@@ -3,17 +3,15 @@ package to.tawk.tawktotestapp.viewmodel
 import android.app.Application
 import android.text.TextUtils
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import to.tawk.tawktotestapp.config.App
-import to.tawk.tawktotestapp.helper.SingleLiveEvent
 import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.GithubUser
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+class ProfileViewModel(application: Application) : BaseViewModel(application) {
 
     companion object {
         private const val TAG = "ProfileViewModel"
@@ -21,28 +19,25 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         const val ACTION_SAVED: Int = 402
     }
 
-    private val disposable: CompositeDisposable = CompositeDisposable()
-    val isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val actionEvent: SingleLiveEvent<Int> = SingleLiveEvent()
     val githubUser: MutableLiveData<GithubUser> = MutableLiveData()
     val note: MutableLiveData<String> = MutableLiveData()
-
+    private var hasPendingRequest = false
 
 
     fun fetch(userId: Long) {
-        disposable.add(
-            App.db.githubUserDao().getUserById(userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { isLoading.postValue(true) }
-                .doAfterTerminate { isLoading.postValue(false) }
-                .subscribe ( { u ->
-                    setUser(u)
-                    fetchFromApi()
-                }, {
-                   actionBack()
-                } )
-        )
+        App.db.githubUserDao().getUserById(userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { isLoading.postValue(true) }
+            .doAfterTerminate { isLoading.postValue(false) }
+            .subscribe ( { u ->
+                setUser(u)
+                fetchFromApi()
+            }, {
+                Log.e(TAG, "fetch: error -> " + it.message, it)
+                actionBack()
+            } )
+            .addTo(compositeDisposable)
     }
 
     private fun setUser(user: GithubUser) {
@@ -54,8 +49,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         // load user info from api if not loaded before
         // checking by field {name} in model
         if(TextUtils.isEmpty(githubUser.value?.name)) {
-            githubUser.value?.url?.let { url ->
-                disposable.add(
+            // Check For Internet Connection Status
+            if(UtilsLiveData.internetConnectionStatus.value == true) {
+                hasPendingRequest = false
+                githubUser.value?.url?.let { url ->
                     App.apiService.getUserInfoFromApiUrl(url)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -71,23 +68,26 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         }, {
                             Log.e(TAG, "Error : " + it.message)
                         })
-                )
+                        .addTo(compositeDisposable)
+                }
+            } else {
+                hasPendingRequest = true
             }
+
         }
     }
 
     // insert new data in local database
     private fun updateLocalRecord(user: GithubUser) {
-        disposable.add(
-            App.db.githubUserDao().updateUser(user)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe({
-                    UtilsLiveData.updatedRecordId.postValue(user.id)
-                }, {
-                    it.message?.let { msg -> Log.e(TAG, msg) }
-                })
-        )
+        App.db.githubUserDao().updateUser(user)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({
+                UtilsLiveData.updatedRecordId.postValue(user.id)
+            }, {
+                it.message?.let { msg -> Log.e(TAG, msg) }
+            })
+            .addTo(compositeDisposable)
     }
 
     // exit this screen
@@ -100,7 +100,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         Log.d(TAG, "saveNote: " + note.value)
         githubUser.value?.let {
             it.note = note.value
-            disposable.add( App.db.githubUserDao().updateUser(it)
+            compositeDisposable.add( App.db.githubUserDao().updateUser(it)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {_ ->
@@ -109,6 +109,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 }
             )
         }
+    }
+
+    fun sendPendingRequest() {
+        if(hasPendingRequest)
+            fetchFromApi()
     }
 
 }

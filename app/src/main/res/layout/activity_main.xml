@@ -7,7 +7,9 @@
         <variable
             name="viewModel"
             type="to.tawk.tawktotestapp.viewmodel.MainViewModel" />
-        <import type="to.tawk.tawktotestapp.helper.UtilsLiveData"/>
+        <variable
+            name="utilsLiveData"
+            type="to.tawk.tawktotestapp.helper.UtilsLiveData.Companion" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -33,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/no_internet_view_min_height"
                     android:background="@color/error"
-                    visibleIf="@{!UtilsLiveData.INSTANCE.internetConnectionStatus}">
+                    visibleIf="@{!utilsLiveData.internetConnectionStatus}">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -57,8 +59,6 @@
                     app:trackThickness="@dimen/xs"
                     app:trackColor="@color/onErrorLighter"
                     app:indicatorColor="@color/onError"
-                    tools:max="100"
-                    tools:progress="50"
                     android:indeterminate="true"
                     visibleIf="@{viewModel.isLoading}"
                     />
@@ -139,6 +139,7 @@
                         android:hint="@string/search"
                         android:textColorHint="@color/onSurface"
                         android:textColor="@color/onPrimary"
+                        android:text="@={viewModel.searchKeyword}"
                         />
 
                     <androidx.appcompat.widget.AppCompatImageView

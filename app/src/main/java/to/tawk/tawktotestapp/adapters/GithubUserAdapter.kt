@@ -3,7 +3,11 @@ package to.tawk.tawktotestapp.adapters
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncDifferConfig
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -15,74 +19,75 @@ import to.tawk.tawktotestapp.databinding.GithubUserListItemBinding
 import to.tawk.tawktotestapp.model.GithubUser
 import to.tawk.tawktotestapp.navigator.ScreenNavigator
 
-class GithubUserAdapter: RecyclerView.Adapter<GithubUserAdapter.ItemVH> () {
+class GithubUserAdapter() : ListAdapter<GithubUser, GithubUserAdapter.ItemVH>(GithubUserDiffCallback()) {
+
     companion object {
         private const val TAG = "GithubUserAdapter"
     }
 
-    private var items : ArrayList<GithubUser> = ArrayList()
+    init {
+        setHasStableIds(true)
+    }
 
-    private fun getItemAt(position: Int) : GithubUser? =
-        if(items.isNullOrEmpty() || position < 0 || position >= items.size) null
-        else items[position]
+    override fun getItemId(position: Int) : Long = getItem(position).id
 
-
-    fun addItems(list: List<GithubUser>?) {
-        if(!list.isNullOrEmpty()) {
-            val prevCount = itemCount
-            items.addAll(list)
-            val size = itemCount - prevCount
-            if(size > 0) {
-                notifyItemRangeInserted(prevCount, size)
-            }
+    fun addItems(items: List<GithubUser>?) {
+        if(!items.isNullOrEmpty()) {
+            val newlist = currentList.toMutableList()
+            newlist.addAll(items)
+            submitList(newlist)
         }
+    }
+
+    private fun replaceItemAt(index: Int, user: GithubUser) {
+        val newlist = currentList.toMutableList()
+        newlist[index] = user
+        submitList(newlist)
     }
 
     fun clear() {
-        val prevCount = itemCount
-        items = ArrayList()
-        if(prevCount > 0) {
-            notifyItemRangeRemoved(0, prevCount)
-        }
+        submitList(null)
     }
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemVH =
-        ItemVH( GithubUserListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false) )
-
-    override fun onBindViewHolder(holder: ItemVH, position: Int) = holder.bind(getItemAt(position), position % 4 == 3)
-
-    override fun getItemCount(): Int = if(items.isNullOrEmpty()) 0 else items.size
 
     @SuppressLint("CheckResult")
     fun onRecordUpdated(id: Long?) {
+        // Update The list, if any item updated in local database
         Log.d(TAG, "onRecordUpdated: $id")
+
         id?.let {
-            val index = items.indexOfFirst { e -> e.id == id }
+            val index = currentList.indexOfFirst { e -> e.id == id }
             if(index >= 0) {
                 Log.d(TAG, "onRecordUpdated: index -> $index")
                 App.db.githubUserDao().getUserById(id)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { record ->
-                        items[index] = record
-                        notifyItemChanged(index)
-                    }
+                    .subscribe { record -> replaceItemAt(index, record) }
             }
         }
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemVH =
+        ItemVH( GithubUserListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false) )
+
+    override fun onBindViewHolder(holder: ItemVH, position: Int) = holder.bind(getItem(position), position % 4 == 3)
+
     inner class ItemVH(_binding: GithubUserListItemBinding) : RecyclerView.ViewHolder(_binding.root) {
         private val binding: GithubUserListItemBinding = _binding
 
+        init {
+            // handle click on item
+            itemView.setOnClickListener { v ->
+                ScreenNavigator.navigateToUserProfileScreen(v.context, getItem(layoutPosition).id)
+            }
+        }
+
         fun bind(user: GithubUser?, negative: Boolean) {
-            binding.navigator = ScreenNavigator.Companion
             binding.negative = negative
             binding.user = user
         }
 
-
     }
+
 
 
 

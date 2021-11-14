@@ -8,7 +8,9 @@
             name="viewModel"
             type="to.tawk.tawktotestapp.viewmodel.ProfileViewModel" />
         <import type="android.text.TextUtils" />
-        <import type="to.tawk.tawktotestapp.helper.UtilsLiveData"/>
+        <variable
+            name="utilsLiveData"
+            type="to.tawk.tawktotestapp.helper.UtilsLiveData.Companion" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -142,7 +144,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         app:tint="@color/onSurface"
-                        app:srcCompat="@drawable/ic_group_users"
+                        app:srcCompat="@drawable/ic_company"
                         android:layout_gravity="center_vertical"
                         />
 
@@ -303,7 +305,7 @@
                         android:clickable="true" android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         app:srcCompat="@drawable/ic_no_signal"
-                        visibleIf="@{!UtilsLiveData.INSTANCE.internetConnectionStatus}"
+                        visibleIf="@{!utilsLiveData.internetConnectionStatus}"
                         />
 
 
