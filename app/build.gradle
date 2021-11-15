@@ -75,6 +75,7 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
 
     // skleton
-    //implementation 'com.github.EudyContreras:Skeleton-Bones:v1.4.4'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+
 
 }

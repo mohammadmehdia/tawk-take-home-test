@@ -20,11 +20,9 @@ interface GithubUserDao {
     @Update
     fun updateUser(user: GithubUser) : Single<Int>
 
-//    @Update(entity = GithubUser::class)
-//    fun updateUserNote(obj: GithubUserNoteUpdate) : Single<Int>
-
     @Query("select * from users where id = :id limit 1")
     fun getUserById(id: Long): Single<GithubUser>
+
 
     @Query("select count(*) from users")
     fun totalCount() : Single<Long>
@@ -32,5 +30,10 @@ interface GithubUserDao {
     @Query("select * from users where login like :keyword or name  like :keyword or note like :keyword")
     fun search(keyword: String) : Single<List<GithubUser>>
 
+    @Delete
+    fun delete(user: GithubUser)
+
+    @Query("delete from users where 1")
+    fun truncate()
 
 }

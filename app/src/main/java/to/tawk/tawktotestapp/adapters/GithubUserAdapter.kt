@@ -56,7 +56,7 @@ class GithubUserAdapter() : ListAdapter<GithubUser, GithubUserAdapter.ItemVH>(Gi
 
         id?.let {
             val index = currentList.indexOfFirst { e -> e.id == id }
-            if(index >= 0) {
+            if (index >= 0) {
                 Log.d(TAG, "onRecordUpdated: index -> $index")
                 App.db.githubUserDao().getUserById(id)
                     .subscribeOn(Schedulers.io())

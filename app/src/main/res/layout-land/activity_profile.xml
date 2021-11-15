@@ -22,21 +22,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progress_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_margin="@dimen/md"
-                app:indicatorSize="@dimen/progress_indicator_size"
-                app:trackThickness="@dimen/xs"
-                app:trackColor="@color/surface"
-                app:indicatorColor="@color/onPrimary"
-                android:indeterminate="true"
-                visibleIf="@{viewModel.isLoading}"
-                />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_avatar"
@@ -61,6 +46,7 @@
                 android:textSize="@dimen/text_xl"
                 android:text="@{viewModel.githubUser.displayName}"
                 android:textStyle="bold"
+                android:alpha="@{viewModel.isLoading() ? 0 : 1}"
                 />
 
             <LinearLayout
@@ -71,6 +57,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_name"
                 app:layout_constraintStart_toStartOf="@id/tv_name"
                 android:orientation="vertical"
+                android:alpha="@{viewModel.isLoading() ? 0 : 1}"
                 >
 
                 <LinearLayout
@@ -235,6 +222,11 @@
                 android:textSize="@dimen/text_md"
                 android:padding="@dimen/lg"
                 android:onClick="@{v -> viewModel.saveNote()}"
+                />
+
+            <include
+                layout="@layout/profile_skeleton_layout"
+                viewModel="@{viewModel}"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

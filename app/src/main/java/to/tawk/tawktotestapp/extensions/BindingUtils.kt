@@ -27,6 +27,7 @@ import android.text.SpannableString
 
 import android.text.TextUtils
 import android.text.style.StyleSpan
+import io.supercharge.shimmerlayout.ShimmerLayout
 import java.lang.Exception
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -85,4 +86,15 @@ fun TextView.boldNumbers(str: String?) {
         text = ss
     }
 
+}
+
+@BindingAdapter("start_shimmer")
+fun ShimmerLayout.startShimmer(value: Boolean) {
+    if(value) {
+        visibility = View.VISIBLE
+        startShimmerAnimation()
+    } else {
+        stopShimmerAnimation()
+        visibility = View.GONE
+    }
 }

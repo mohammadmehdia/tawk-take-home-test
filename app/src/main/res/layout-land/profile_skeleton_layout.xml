@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="to.tawk.tawktotestapp.viewmodel.ProfileViewModel" />
+        <import type="android.text.TextUtils" />
+    </data>
+
+    <io.supercharge.shimmerlayout.ShimmerLayout
+        android:id="@+id/skeleton_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:shimmer_angle="10"
+        app:shimmer_mask_width="0.2"
+        app:shimmer_color="@color/shimmer"
+        start_shimmer="@{viewModel.isLoading}"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/sk_avatar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.20"
+                app:layout_constraintDimensionRatio="H,1:1"
+                android:layout_margin="@dimen/lg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/skeleton_view_bg_oval"
+                />
+
+            <View
+                android:id="@+id/sk1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.18"
+                app:layout_constraintHeight_percent="0.07"
+                app:layout_constraintStart_toStartOf="@id/sk_avatar"
+                app:layout_constraintTop_toBottomOf="@id/sk_avatar"
+                android:layout_marginTop="@dimen/md"
+                android:background="@drawable/skeleton_view_bg"
+                />
+
+            <View
+                android:id="@+id/sk2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.22"
+                app:layout_constraintHeight_percent="0.06"
+                app:layout_constraintStart_toStartOf="@id/sk1"
+                app:layout_constraintTop_toBottomOf="@id/sk1"
+                android:layout_marginTop="@dimen/md"
+                android:background="@drawable/skeleton_view_bg"
+                />
+
+            <View
+                android:id="@+id/sk3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.16"
+                app:layout_constraintHeight_percent="0.06"
+                app:layout_constraintStart_toStartOf="@id/sk2"
+                app:layout_constraintTop_toBottomOf="@id/sk2"
+                android:layout_marginTop="@dimen/md"
+                android:background="@drawable/skeleton_view_bg"
+                />
+
+            <View
+                android:id="@+id/sk4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.12"
+                app:layout_constraintHeight_percent="0.06"
+                app:layout_constraintStart_toStartOf="@id/sk3"
+                app:layout_constraintTop_toBottomOf="@id/sk3"
+                android:layout_marginTop="@dimen/md"
+                android:background="@drawable/skeleton_view_bg"
+                />
+
+            <View
+                android:id="@+id/sk5"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.22"
+                app:layout_constraintHeight_percent="0.06"
+                app:layout_constraintStart_toStartOf="@id/sk4"
+                app:layout_constraintTop_toBottomOf="@id/sk4"
+                android:layout_marginTop="@dimen/md"
+                android:background="@drawable/skeleton_view_bg"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </io.supercharge.shimmerlayout.ShimmerLayout>
+
+</layout>

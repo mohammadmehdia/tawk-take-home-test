@@ -8,8 +8,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import to.tawk.tawktotestapp.config.App
+import to.tawk.tawktotestapp.config.Constants
+import to.tawk.tawktotestapp.extensions.retryExponential
 import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.GithubUser
+import java.util.concurrent.TimeUnit
 
 class ProfileViewModel(application: Application) : BaseViewModel(application) {
 
@@ -28,8 +31,6 @@ class ProfileViewModel(application: Application) : BaseViewModel(application) {
         App.db.githubUserDao().getUserById(userId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { isLoading.postValue(true) }
-            .doAfterTerminate { isLoading.postValue(false) }
             .subscribe ( { u ->
                 setUser(u)
                 fetchFromApi()
@@ -54,6 +55,8 @@ class ProfileViewModel(application: Application) : BaseViewModel(application) {
                 hasPendingRequest = false
                 githubUser.value?.url?.let { url ->
                     App.apiService.getUserInfoFromApiUrl(url)
+                        .delay(Constants.NETWORK_DELAY, TimeUnit.SECONDS)   // Delay to see shimer
+                        .retryExponential(Constants.MAX_RETRY_COUNT)        // Exponential BackOff Retry (max retry count: Constants.MAX_RETRY_COUNT)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {

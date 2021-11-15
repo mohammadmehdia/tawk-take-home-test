@@ -2,11 +2,11 @@
     <string name="app_name">Tawk To</string>
     <string name="search">Search</string>
 
-    <string name="x_followers_y_following">%d Followers · %d Following</string>
+    <string name="x_followers_y_following" formatted="false">%d Followers · %d Following</string>
     <string name="note">Note</string>
     <string name="notes">Notes</string>
     <string name="notes_label">Notes:</string>
-    <string name="notes_hint">Write your notes here...</string>
+    <string name="notes_hint">Write your notes here…</string>
     <string name="save">Save</string>
     <string name="saved">Saved</string>
     <string name="no_network_connection">No Network Connection!</string>

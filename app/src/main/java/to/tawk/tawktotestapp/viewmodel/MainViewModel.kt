@@ -14,6 +14,7 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import to.tawk.tawktotestapp.config.App
 import to.tawk.tawktotestapp.config.Constants
+import to.tawk.tawktotestapp.extensions.retryExponential
 import to.tawk.tawktotestapp.helper.SingleLiveEvent
 import to.tawk.tawktotestapp.helper.UtilsLiveData
 import to.tawk.tawktotestapp.model.GithubUser
@@ -42,12 +43,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             App.db.githubUserDao().loadUsersSince(sinceParam)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    isLoading.postValue(true)
-                }
-                .doAfterTerminate {
-                    isLoading.postValue(false)
-                }
                 .subscribe ( {
                     if(it.isNullOrEmpty()) {
                         // There is no more data in local database, try to load from api
@@ -73,8 +68,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         if(UtilsLiveData.internetConnectionStatus.value == true) {
             // Is Online -> perform api search
             App.apiService.getUsers(_since)
+                .delay(Constants.NETWORK_DELAY, TimeUnit.SECONDS)   // delay for indicator visibility
+                .retryExponential(Constants.MAX_RETRY_COUNT)        // Exponential BackOff Retry (max retry count: Constants.MAX_RETRY_COUNT)
                 .subscribeOn(Schedulers.io())
-                .delay(Constants.NETWORK_DELAY, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     isLoading.postValue(true)

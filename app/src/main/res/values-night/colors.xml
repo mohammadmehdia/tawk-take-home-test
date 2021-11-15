@@ -15,5 +15,7 @@
     <color name="onPrimary">#FFFFFF</color>
     <color name="onSurface">#A0A0A0</color>
     <color name="surfaceLight">#1E1E1E</color>
+    <color name="skeleton">#353535</color>
+    <color name="shimmer">#A2878787</color>
 
 </resources>
